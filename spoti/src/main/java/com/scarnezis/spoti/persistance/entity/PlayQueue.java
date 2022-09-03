@@ -1,25 +1,31 @@
 package com.scarnezis.spoti.persistance.entity;
 
 import lombok.Data;
+import springfox.documentation.swagger2.mappers.ModelMapper;
+
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 import java.util.Collection;
 import java.util.Queue;
 
-// singleton
 @Data
-public class PlayQueue implements Playable{
+@Entity
+@Embeddable
+public class PlayQueue{
 
   private Collection<Song> songs;
+  private Reproduction reproduction;
 
   public PlayQueue(Collection<Song> songs) {
-    this.songs = songs;
+    this.songs =  songs;
+    reproduction = new Reproduction();
   }
 
-  @Override
-  public void play() {
-    while (!songs.isEmpty()){
-      Song song = ((Queue<Song>) songs).remove();
-      song.play();
+  public void play(){
+    if (reproduction.getSong() == null){
+      reproduction.setSong(nextSong());
     }
+    reproduction.run();
   }
 
   public void add(Song song){
@@ -29,4 +35,9 @@ public class PlayQueue implements Playable{
   public void quit(Song song){
     songs.remove(song);
   }
+
+  public Song nextSong(){
+     return ((Queue<Song>) songs).poll();
+  }
+
 }

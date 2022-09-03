@@ -2,17 +2,20 @@ package com.scarnezis.spoti.persistance.entity;
 
 import lombok.Data;
 
+import javax.persistence.*;
+import java.time.LocalDate;
+
 @Data
-public class Song  implements Playable{
+@Entity
+@Table
+public class Song{
 
   private String name;
+  @OneToMany
   private Artist artist;
+  @Enumerated
   private Gender gender;
-
-
-  @Override
-  public void play() {
-    Reproduction reproduction = new Reproduction(this);
-    reproduction.run();
-  }
+  private Float seconds;
+  private LocalDate releaseDate;
+  private Integer numberOfLikes;
 }
