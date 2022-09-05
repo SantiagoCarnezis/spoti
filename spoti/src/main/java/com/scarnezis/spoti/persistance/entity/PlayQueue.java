@@ -3,17 +3,19 @@ package com.scarnezis.spoti.persistance.entity;
 import lombok.Data;
 import springfox.documentation.swagger2.mappers.ModelMapper;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Queue;
 
 @Data
-@Entity
 @Embeddable
 public class PlayQueue{
 
+  @ManyToMany
+  @JoinTable(name = "queue")
+  //@OrderColumn(name="song_index")
   private Collection<Song> songs;
+  @Embedded
   private Reproduction reproduction;
 
   public PlayQueue(Collection<Song> songs) {

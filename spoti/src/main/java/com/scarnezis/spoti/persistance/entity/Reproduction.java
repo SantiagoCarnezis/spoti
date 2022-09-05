@@ -2,12 +2,18 @@ package com.scarnezis.spoti.persistance.entity;
 
 import lombok.Data;
 
+import javax.persistence.*;
+
 @Data
+@Embeddable
 public class Reproduction {
 
+  @ManyToOne
+  @JoinColumn(name = "reproduction_song_id")
   private Song song;
-  private Integer seconds;
-  //TODO its necessary a boolean state? like playing or stopped
+  @Column(name = "reproduction_time_lapsed")
+  private Integer timeLapsed;
+  private Boolean isPlaying;
 
   public void run(){
     //TODO start running the seconds
@@ -19,7 +25,7 @@ public class Reproduction {
 
   public void setSong(Song song) {
     this.song = song;
-    this.seconds = 0;
+    this.timeLapsed = 0;
   }
 
   public void finish(){

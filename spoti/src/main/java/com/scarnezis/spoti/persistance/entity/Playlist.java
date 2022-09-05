@@ -2,9 +2,8 @@ package com.scarnezis.spoti.persistance.entity;
 
 import lombok.Data;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Data
@@ -12,8 +11,11 @@ import java.util.List;
 @Table
 public class Playlist{
 
+  @Id
+  @GeneratedValue
+  private int id;
   @ElementCollection
-  private List<PlaylistSong> playlistSongs;
+  private Collection<Track> tracks;
   private String description;
 
   public Gender gender(){
@@ -21,9 +23,9 @@ public class Playlist{
     return Gender.POP;
   }
 
-  public void addplaylistSongs(PlaylistSong playlistSong){
+  public void addplaylistSongs(Track track){
     //TODO check if it is already and if he want add likewise, se hace en el controller
-    playlistSongs.add(playlistSong);
+    tracks.add(track);
   }
 
 }

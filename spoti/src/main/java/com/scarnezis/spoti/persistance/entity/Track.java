@@ -1,16 +1,18 @@
 package com.scarnezis.spoti.persistance.entity;
 
 import lombok.Data;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
-@Entity
 @Embeddable
-public class PlaylistSong {
+public class Track {
 
+  @ManyToOne
+  @JoinColumn(name = "song_id")
   private Song song;
   private LocalDate addedAt;
+  @ManyToOne
   private User addedBy;
 }

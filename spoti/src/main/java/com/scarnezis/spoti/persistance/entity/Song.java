@@ -10,12 +10,16 @@ import java.time.LocalDate;
 @Table
 public class Song{
 
+  @Id
+  @GeneratedValue
+  private int id;
   private String name;
-  @OneToMany
+  @ManyToOne
+  @JoinColumn(name = "artist_id")
   private Artist artist;
   @Enumerated
   private Gender gender;
-  private Float seconds;
+  private Float duration;
   private LocalDate releaseDate;
   private Integer numberOfLikes;
 }
