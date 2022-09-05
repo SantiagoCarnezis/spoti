@@ -1,45 +1,52 @@
 package com.scarnezis.spoti.persistance.entity;
 
 import lombok.Data;
-import springfox.documentation.swagger2.mappers.ModelMapper;
 
 import javax.persistence.*;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 @Data
 @Embeddable
 public class PlayQueue{
 
-  @ManyToMany
-  @JoinTable(name = "queue")
-  //@OrderColumn(name="song_index")
-  private Collection<Song> songs;
+  @OneToMany(targetEntity = Device.class)
+  @JoinColumn(table = "device", name = "device_id", unique = true, referencedColumnName = "id")
+  private Collection<EnqueuedSong> enqueuedSongs;
   @Embedded
   private Reproduction reproduction;
 
-  public PlayQueue(Collection<Song> songs) {
-    this.songs =  songs;
+  public PlayQueue() {
+    enqueuedSongs =  new ArrayDeque<>();
     reproduction = new Reproduction();
   }
 
   public void play(){
-    if (reproduction.getSong() == null){
+    if (reproduction.haveSong()){
       reproduction.setSong(nextSong());
     }
     reproduction.run();
   }
 
-  public void add(Song song){
-    songs.add(song);
+  public void add(EnqueuedSong enqueuedSong){
+    enqueuedSongs.add(enqueuedSong);
   }
 
-  public void quit(Song song){
-    songs.remove(song);
+  public void quit(EnqueuedSong enqueuedSong){
+    enqueuedSongs.remove(enqueuedSong);
+  }
+
+  public Queue<Song> songs(){
+    return (Queue<Song>) enqueuedSongs.stream().map(EnqueuedSong::getSong);
   }
 
   public Song nextSong(){
-     return ((Queue<Song>) songs).poll();
+     return songs().poll();
   }
 
+  public Integer size(){
+    return enqueuedSongs.size();
+  }
 }

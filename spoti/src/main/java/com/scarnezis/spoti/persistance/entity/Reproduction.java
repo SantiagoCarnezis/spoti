@@ -11,7 +11,7 @@ public class Reproduction {
   @ManyToOne
   @JoinColumn(name = "reproduction_song_id")
   private Song song;
-  @Column(name = "reproduction_time_lapsed")
+  @Column(name = "reproduction_song_time_lapsed")
   private Integer timeLapsed;
   private Boolean isPlaying;
 
@@ -30,5 +30,9 @@ public class Reproduction {
 
   public void finish(){
     song = null;
+  }
+
+  public boolean haveSong(){
+    return song != null;
   }
 }
