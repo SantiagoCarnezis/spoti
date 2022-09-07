@@ -14,8 +14,10 @@ public class Device {
   @Id
   @GeneratedValue
   private int id;
+
   @OneToOne
   private User user;
+
   @Embedded
   private PlayQueue playQueue;
 }
