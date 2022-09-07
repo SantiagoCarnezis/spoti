@@ -5,16 +5,13 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Data
-@Entity
-@Table
+@Embeddable
 public class EnqueuedSong {
 
-  @Id
-  @GeneratedValue
-  private int id;
   @ManyToOne
-  @JoinColumn(name = "song_id", unique = true)
+  @JoinColumn(name = "song_id", nullable = false)
   private Song song;
-  @Column(name = "_order")
-  private Integer order;
+
+  @Column(name = "queue_index", nullable = false)
+  private Integer index;
 }

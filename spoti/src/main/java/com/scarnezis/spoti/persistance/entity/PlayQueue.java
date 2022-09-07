@@ -1,6 +1,7 @@
 package com.scarnezis.spoti.persistance.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.CollectionId;
 
 import javax.persistence.*;
 import java.util.ArrayDeque;
@@ -12,9 +13,10 @@ import java.util.stream.Collectors;
 @Embeddable
 public class PlayQueue{
 
-  @OneToMany(targetEntity = Device.class)
-  @JoinColumn(table = "device", name = "device_id", unique = true, referencedColumnName = "id")
+  @ElementCollection
+  @CollectionTable(name = "enqueued_song")
   private Collection<EnqueuedSong> enqueuedSongs;
+
   @Embedded
   private Reproduction reproduction;
 

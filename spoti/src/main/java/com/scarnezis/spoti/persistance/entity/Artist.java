@@ -2,10 +2,7 @@ package com.scarnezis.spoti.persistance.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
@@ -16,6 +13,9 @@ public class Artist {
   @Id
   @GeneratedValue
   private int id;
+
+  @Column(nullable = false)
   private String name;
+
   private LocalDate birthday;
 }

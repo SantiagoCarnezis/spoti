@@ -15,12 +15,20 @@ public class User {
   @Id
   @GeneratedValue
   private int id;
+
   @Transient
   private Set<Playlist> ownPlaylists;
+
   @Transient
   private Set<Playlist> suscribePlaylists;
+
+  @Column(nullable = false)
   private String email;
+
+  @Column(nullable = false)
   private LocalDate birthdate;
+
+  @Column(nullable = false)
   private LocalDate registerDate;
 
   //TODO recomendateSongs
