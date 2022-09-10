@@ -13,11 +13,9 @@ public class Playlist{
 
   @Id
   @GeneratedValue
-  private int id;
-
+  private Long id;
   @ElementCollection
   private Collection<Track> tracks;
-
   private String description;
 
   public Gender gender(){

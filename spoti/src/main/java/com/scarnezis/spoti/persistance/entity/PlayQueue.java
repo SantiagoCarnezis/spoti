@@ -15,7 +15,6 @@ public class PlayQueue{
   @CollectionTable(name = "enqueued_song")
   private Collection<EnqueuedSong> enqueuedSongs;
 
-
   public PlayQueue() {
     enqueuedSongs =  new ArrayDeque<>();
   }

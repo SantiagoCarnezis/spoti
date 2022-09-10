@@ -13,23 +13,17 @@ public class User {
 
   @Id
   @GeneratedValue
-  private int id;
-
+  private Long id;
   @Column(nullable = false)
   private String name;
-
   @Transient
   private Set<Playlist> ownPlaylists;
-
   @Transient
   private Set<Playlist> suscribePlaylists;
-
   @Column(nullable = false)
   private String email;
-
   @Column(nullable = false)
   private LocalDate birthdate;
-
   @Column(nullable = false)
   private LocalDate registerDate;
 

@@ -12,10 +12,8 @@ public class Artist {
 
   @Id
   @GeneratedValue
-  private int id;
-
+  private Long id;
   @Column(nullable = false)
   private String name;
-
   private LocalDate birthday;
 }

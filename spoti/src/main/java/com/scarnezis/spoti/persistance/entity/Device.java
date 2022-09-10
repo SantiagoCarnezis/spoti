@@ -11,21 +11,16 @@ public class Device {
 
   @Id
   @GeneratedValue
-  private int id;
-
+  private Long id;
   @Transient
   private Reproductor reproductor;
-
   @OneToOne
   private User user;
-
   @Embedded()
   private PlayQueue playQueue;
-
   @ManyToOne
   @JoinColumn(name = "playing_song_id")
   private Song playingSong;
-
   @Column
   private Integer playingSongSeconds;
 
