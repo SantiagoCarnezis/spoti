@@ -11,9 +11,8 @@ import java.time.LocalDate;
 public class Artist {
 
   @Id
-  @GeneratedValue
-  private Long id;
-  @Column(nullable = false)
   private String name;
   private LocalDate birthday;
+  @Column(name = "register_at", nullable = false)
+  private LocalDate registerDate;
 }

@@ -14,6 +14,8 @@ public class Playlist{
   @Id
   @GeneratedValue
   private Long id;
+  @Column(nullable = false)
+  private String name;
   @ElementCollection
   private Collection<Track> tracks;
   private String description;

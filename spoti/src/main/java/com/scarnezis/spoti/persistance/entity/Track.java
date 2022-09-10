@@ -10,7 +10,8 @@ import java.time.LocalDate;
 public class Track {
 
   @ManyToOne
-  @JoinColumn(name = "song_id", nullable = false)
+  @JoinColumn(name = "song_name", nullable = false, referencedColumnName = "name")
+  @JoinColumn(name = "song_artist", nullable = false, referencedColumnName = "artist_id")
   private Song song;
   @Column(nullable = false)
   private LocalDate addedAt;

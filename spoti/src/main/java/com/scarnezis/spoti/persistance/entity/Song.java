@@ -1,36 +1,33 @@
 package com.scarnezis.spoti.persistance.entity;
 
+import com.scarnezis.spoti.persistance.entity.id.SongId;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Data
+@Setter
+@Getter
 @Entity
 @Table
-@Embeddable
+@IdClass( value = SongId.class)
 public class Song{
 
   @Id
-  @GeneratedValue
-  private int id;
-
-  @Column(nullable = false)
   private String name;
-
+  @Id
   @ManyToOne
-  @JoinColumn(name = "artist_id", nullable = false)
+  @JoinColumn(name = "artist_id")
   private Artist artist;
-
   @Enumerated
   private Gender gender;
-
   @Column(nullable = false)
   private Integer duration;
-
   @Column(nullable = false)
   private LocalDate releaseDate;
-
   @Column(nullable = false)
   private Integer numberOfLikes;
+
 }

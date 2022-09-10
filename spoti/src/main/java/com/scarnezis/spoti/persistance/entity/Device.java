@@ -19,7 +19,8 @@ public class Device {
   @Embedded()
   private PlayQueue playQueue;
   @ManyToOne
-  @JoinColumn(name = "playing_song_id")
+  @JoinColumn(name = "song_name", referencedColumnName = "name")
+  @JoinColumn(name = "song_artist", referencedColumnName = "artist_id")
   private Song playingSong;
   @Column
   private Integer playingSongSeconds;
