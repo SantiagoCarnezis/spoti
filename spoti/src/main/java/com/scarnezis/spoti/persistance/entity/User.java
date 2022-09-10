@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Set;
 
 @Data
@@ -15,6 +14,9 @@ public class User {
   @Id
   @GeneratedValue
   private int id;
+
+  @Column(nullable = false)
+  private String name;
 
   @Transient
   private Set<Playlist> ownPlaylists;

@@ -26,7 +26,7 @@ public class Song{
   private Gender gender;
 
   @Column(nullable = false)
-  private Float duration;
+  private Integer duration;
 
   @Column(nullable = false)
   private LocalDate releaseDate;

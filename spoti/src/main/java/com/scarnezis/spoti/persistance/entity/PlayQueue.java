@@ -1,13 +1,11 @@
 package com.scarnezis.spoti.persistance.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.CollectionId;
 
 import javax.persistence.*;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Queue;
-import java.util.stream.Collectors;
 
 @Data
 @Embeddable
@@ -17,19 +15,9 @@ public class PlayQueue{
   @CollectionTable(name = "enqueued_song")
   private Collection<EnqueuedSong> enqueuedSongs;
 
-  @Embedded
-  private Reproduction reproduction;
 
   public PlayQueue() {
     enqueuedSongs =  new ArrayDeque<>();
-    reproduction = new Reproduction();
-  }
-
-  public void play(){
-    if (reproduction.haveSong()){
-      reproduction.setSong(nextSong());
-    }
-    reproduction.run();
   }
 
   public void add(EnqueuedSong enqueuedSong){
@@ -50,5 +38,9 @@ public class PlayQueue{
 
   public Integer size(){
     return enqueuedSongs.size();
+  }
+
+  public void shcuffle(){
+
   }
 }
