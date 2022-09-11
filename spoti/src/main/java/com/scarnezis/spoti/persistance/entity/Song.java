@@ -1,7 +1,6 @@
 package com.scarnezis.spoti.persistance.entity;
 
 import com.scarnezis.spoti.persistance.entity.id.SongId;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
