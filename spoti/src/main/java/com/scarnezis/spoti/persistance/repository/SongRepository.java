@@ -1,5 +1,6 @@
 package com.scarnezis.spoti.persistance.repository;
 
+import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.entity.Artist;
 import com.scarnezis.spoti.persistance.entity.Song;
 import com.scarnezis.spoti.persistance.entity.id.SongId;
@@ -12,11 +13,14 @@ import java.util.List;
 
 public interface SongRepository extends JpaRepository<Song, SongId> {
 
-  public List<Song> findAllByNameContaining(String name);
+  List<Song> findAllByNameContaining(String name);
 
-  public List<Song> findAllByArtist(String name);
+  List<Song> findAllByArtist(Artist artist);
 
   @Modifying
-  @Query(value = "UPDATE song SET numberOfLikes = :numberOfLikes WHERE name = :song and artist = :artist")
-  public void setSongLike(String song, Artist artist, Integer numberOfLikes);
+  @Query(value = "UPDATE " + TableNames.SONG +
+      " SET numberOfLikes = :numberOfLikes WHERE name = :songName and artist = :artist",
+      nativeQuery = true)
+  void setSongLike(@Param("songName") String songName, @Param("artist") Artist artist,
+                   @Param("numberOfLikes") Integer numberOfLikes);
 }

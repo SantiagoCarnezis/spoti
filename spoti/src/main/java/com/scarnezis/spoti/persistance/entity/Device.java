@@ -1,12 +1,14 @@
 package com.scarnezis.spoti.persistance.entity;
 
+import com.scarnezis.spoti.persistance.TableNames;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-@Table
+@Table(name = TableNames.DEVICE)
 public class Device {
 
   @Id
@@ -16,7 +18,7 @@ public class Device {
   private Reproductor reproductor;
   @OneToOne
   private User user;
-  @Embedded()
+  @Embedded
   private PlayQueue playQueue;
   @ManyToOne
   @JoinColumn(name = "song_name", referencedColumnName = "name")
@@ -33,4 +35,17 @@ public class Device {
      setPlayingSong(getPlayQueue().nextSong());
   }
   */
+
+  //@Autowired
+  public void setReproductor(Reproductor reproductor){
+    this.reproductor = reproductor;
+  }
+
+  public void logOut() {
+    setReproductor(null);
+    setUser(null);
+    setPlayQueue(null);
+    setPlayingSong(null);
+    setPlayingSongSeconds(null);
+  }
 }

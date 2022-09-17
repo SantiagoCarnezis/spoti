@@ -1,15 +1,16 @@
 package com.scarnezis.spoti.persistance.mappers;
 
-import com.scarnezis.spoti.persistance.dto.ArtistInDTO;
-import com.scarnezis.spoti.persistance.entity.Artist;
+
+import com.scarnezis.spoti.persistance.dto.UserInDTO;
+import com.scarnezis.spoti.persistance.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.time.LocalDate;
 
 @Mapper(imports = {LocalDate.class})
-public interface ArtistMapper {
+public interface UserMapper {
 
   @Mapping(target = "registerDate", expression = "java( LocalDate.now() ) ")
-  public Artist artistInDTOToArtist(ArtistInDTO artistInDTO);
+  public User userInDTOToUser(UserInDTO userInDTO);
 }

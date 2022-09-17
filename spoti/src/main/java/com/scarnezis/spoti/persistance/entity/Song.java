@@ -1,5 +1,6 @@
 package com.scarnezis.spoti.persistance.entity;
 
+import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.entity.id.SongId;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Entity
-@Table
+@Table(name = TableNames.SONG)
 @IdClass( value = SongId.class)
 public class Song{
 

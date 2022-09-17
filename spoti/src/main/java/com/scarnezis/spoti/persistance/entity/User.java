@@ -1,5 +1,6 @@
 package com.scarnezis.spoti.persistance.entity;
 
+import com.scarnezis.spoti.persistance.TableNames;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table
+@Table(name = TableNames.USER)
 public class User {
 
   @Id
@@ -16,10 +17,9 @@ public class User {
   private Long id;
   @Column(nullable = false)
   private String name;
-  @Transient
-  private Set<Playlist> ownPlaylists;
-  @Transient
-  private Set<Playlist> suscribePlaylists;
+  @OneToMany
+  @JoinColumn(name = "user", nullable = false)
+  private Set<Playlist> playlists;
   @Column(nullable = false)
   private String email;
   @Column(nullable = false)
@@ -27,10 +27,11 @@ public class User {
   @Column(nullable = false)
   private LocalDate registerDate;
 
-  //TODO recomendateSongs
-  /*
-  public Collection<Song> recomendateSongs(){
-    return
+  public void addPlaylist(Playlist playlist){
+    playlists.add(playlist);
   }
-   */
+
+  public void removePlaylist(Playlist playlist){
+    playlists.remove(playlist);
+  }
 }
