@@ -1,5 +1,6 @@
 package com.scarnezis.spoti.service;
 
+import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
 import com.scarnezis.spoti.persistance.dto.SongInDTO;
 import com.scarnezis.spoti.persistance.entity.Artist;
 import com.scarnezis.spoti.persistance.entity.Song;
@@ -60,8 +61,12 @@ public class SongService {
   }
 
   @Transactional
-  private void _setLikeSong(SongId songId, Integer number) throws Exception {
-    Song song = this.searcherEntity.get(songId, songRepository);
-    this.songRepository.setSongLike(song.getName(), song.getArtist(), song.getNumberOfLikes() + number);
+  private void _setLikeSong(SongId songId, Integer number) throws NoSuchElementInTableException {
+    Song song = this.searcherEntity.getSong(songId);
+    //TODO maybe can use songId
+    this.songRepository.setSongLike(
+        song.getName(),
+        song.getArtist(),
+        song.getNumberOfLikes() + number);
   }
 }
