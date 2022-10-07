@@ -6,11 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 
+  //TODO is necessary?
   @Modifying
   @Query(value = "SELECT * FROM " + TableNames.PLAYLIST + " WHERE user = :user_id",
       nativeQuery = true)

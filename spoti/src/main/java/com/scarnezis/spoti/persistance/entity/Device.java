@@ -22,7 +22,7 @@ public class Device {
   private PlayQueue playQueue;
   @ManyToOne
   @JoinColumn(name = "song_name", referencedColumnName = "name")
-  @JoinColumn(name = "song_artist", referencedColumnName = "artist_id")
+  @JoinColumn(name = "song_artist", referencedColumnName = "artist_name")
   private Song playingSong;
   @Column
   private Integer playingSongSeconds;

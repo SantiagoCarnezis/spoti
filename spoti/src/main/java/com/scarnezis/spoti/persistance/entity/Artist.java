@@ -4,12 +4,13 @@ import com.scarnezis.spoti.persistance.TableNames;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
 @Entity
 @Table(name = TableNames.ARTIST)
-public class Artist {
+public class Artist implements Serializable {
 
   @Id
   private String name;

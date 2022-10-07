@@ -10,18 +10,21 @@ import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.mappers.PlaylistMapper;
 import com.scarnezis.spoti.persistance.mappers.SongMapper;
 import com.scarnezis.spoti.persistance.repository.PlaylistRepository;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Data
-public class PlaylistServicie {
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@Service
+public class PlaylistService {
 
-  private PlaylistRepository playlistRepository;
-  private PlaylistMapper playlistMapper;
-  private SongMapper songMapper;
-  private SearchEntity searcherEntity;
+  private final PlaylistRepository playlistRepository;
+  private final PlaylistMapper playlistMapper;
+  private final SongMapper songMapper;
+  private final SearchEntity searcherEntity;
 
   @Transactional
   public Playlist createPlaylist(PlaylistInDTO playlistInDTO, Long userId) throws NoSuchElementInTableException {
@@ -48,6 +51,7 @@ public class PlaylistServicie {
     Playlist playlist = searcherEntity.getPlaylist(playlistId);
     Track track = _getTrack(songId, userId);
     playlist.addSong(track);
+    this.playlistRepository.save(playlist);
   }
 
   @Transactional
@@ -55,6 +59,7 @@ public class PlaylistServicie {
     Playlist playlist = searcherEntity.getPlaylist(playlistId);
     Track track = _getTrack(songId, userId);
     playlist.removeSong(track);
+    this.playlistRepository.save(playlist);
   }
 
   public List<Playlist> findAllByName(String playlistName){

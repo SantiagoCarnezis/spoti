@@ -3,11 +3,14 @@ package com.scarnezis.spoti.persistance.mappers;
 import com.scarnezis.spoti.persistance.dto.DeviceInDTO;
 import com.scarnezis.spoti.persistance.entity.Device;
 import com.scarnezis.spoti.persistance.entity.PlayQueue;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 
-@Mapper(imports = {PlayQueue.class})
+@Mapper(componentModel = "spring",
+    injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+    imports = {PlayQueue.class})
 public interface DeviceMapper {
 
   @Mapping(target = "playQueue", expression = "java( new PlayQueue() ) ")

@@ -19,4 +19,10 @@ public class SongInDTO {
   private Artist artist;
   private Gender gender;
   private Integer duration;
+
+  public SongInDTO(String name, Gender gender, Integer duration) {
+    this.name = name;
+    this.gender = gender;
+    this.duration = duration;
+  }
 }

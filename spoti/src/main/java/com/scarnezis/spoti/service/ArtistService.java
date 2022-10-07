@@ -1,29 +1,25 @@
 package com.scarnezis.spoti.service;
 
 import com.scarnezis.spoti.persistance.dto.ArtistInDTO;
-import com.scarnezis.spoti.persistance.dto.SongInDTO;
 import com.scarnezis.spoti.persistance.entity.Artist;
-import com.scarnezis.spoti.persistance.entity.Song;
-import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.mappers.ArtistMapper;
 import com.scarnezis.spoti.persistance.repository.ArtistRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
-//@Service
+
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@Service
 public class ArtistService {
 
   private final ArtistMapper mapper;
   private final ArtistRepository repository;
 
-  public ArtistService(ArtistMapper mapper, ArtistRepository repository) {
-    this.mapper = mapper;
-    this.repository = repository;
-  }
-
   public Artist createArtist(ArtistInDTO artistInDTO){
+    //TODO check that not exists another artist, could do using aspects
     Artist artist = this.mapper.artistInDTOToArtist(artistInDTO);
     return this.repository.save(artist);
   }
@@ -34,3 +30,4 @@ public class ArtistService {
 
 
 }
+

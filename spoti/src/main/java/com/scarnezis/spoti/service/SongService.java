@@ -1,6 +1,7 @@
 package com.scarnezis.spoti.service;
 
 import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
+import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.dto.SongInDTO;
 import com.scarnezis.spoti.persistance.entity.Artist;
 import com.scarnezis.spoti.persistance.entity.Song;
@@ -8,60 +9,57 @@ import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.mappers.SongMapper;
 import com.scarnezis.spoti.persistance.repository.ArtistRepository;
 import com.scarnezis.spoti.persistance.repository.SongRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-//@Service
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@Service
 public class SongService {
 
   private final SongMapper mapper;
   private final SongRepository songRepository;
-  private final ArtistRepository artistRepository;
   private final SearchEntity searcherEntity;
 
-  public SongService(SongMapper mapper,
-                     SongRepository songRepository,
-                     ArtistRepository artistRepository,
-                     SearchEntity searcherEntity) {
-    this.mapper = mapper;
-    this.songRepository = songRepository;
-    this.artistRepository = artistRepository;
-    this.searcherEntity = searcherEntity;
-  }
-
   @Transactional
-  public Song createSong(SongInDTO songInDTO) throws Exception {
-    String artistName = songInDTO.getArtist().getName();
-    _validateArtist(artistName);
+  public Song createSong(SongInDTO songInDTO, String artistName) {
+    Artist artist = searcherEntity.getArtist(artistName);
+    songInDTO.setArtist(artist);
     Song song = this.mapper.songInDTOToSong(songInDTO);
-    return this.songRepository.save(song);
+    this.songRepository.save(song);
+    return song;
   }
 
   public List<Song> findAllByName(String songName){
     return this.songRepository.findAllByNameContaining(songName);
   }
 
-  public List<Song> findAllByArtist(Artist artist) throws Exception {
-    _validateArtist(artist.getName());
-    return this.songRepository.findAllByArtist(artist);
+  public List<Song> findAllByArtist(String artistName) {
+    return this.songRepository.findAllByArtistContaining(artistName);
   }
 
-  public void likeSong(SongId songId) throws Exception {
-    _setLikeSong(songId, 1);
+  public List<Song> findAllByNameAndArtist(String songName, String artistName){
+    return this.songRepository.findAllByNameAndArtist(songName, artistName);
   }
 
-  public void dislikeSong(SongId songId) throws Exception {
-    _setLikeSong(songId, -1);
+  public List<Song> findAll(){
+    return this.songRepository.findAll();
   }
 
-  private void _validateArtist(String artistName) throws Exception {
-    if(!this.artistRepository.existsById(artistName))
-      throw new Exception();
+  public void likeSong(String songName, String artistName) {
+    _setLikeSong(songName, artistName, 1);
+  }
+
+  public void quitLikeSong(String songName, String artistName) {
+    _setLikeSong(songName, artistName,-1);
   }
 
   @Transactional
-  private void _setLikeSong(SongId songId, Integer number) throws NoSuchElementInTableException {
+  private void _setLikeSong(String songName, String artistName, Integer number) throws NoSuchElementInTableException {
+    SongId songId = new SongId(songName, artistName);
     Song song = this.searcherEntity.getSong(songId);
     //TODO maybe can use songId
     this.songRepository.setSongLike(

@@ -5,17 +5,22 @@ import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.entity.*;
 import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.repository.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@Component
 public class SearchEntity {
 
-  private UserRepository userRepository;
-  private SongRepository songRepository;
-  private DeviceRepository deviceRepository;
-  private ArtistRepository artistRepository;
-  private PlaylistRepository playlistRepository;
+  private final UserRepository userRepository;
+  private final SongRepository songRepository;
+  private final DeviceRepository deviceRepository;
+  private final ArtistRepository artistRepository;
+  private final PlaylistRepository playlistRepository;
 
   public User getUser(Long userId) throws NoSuchElementInTableException {
     return this.get(userId, userRepository, TableNames.USER);

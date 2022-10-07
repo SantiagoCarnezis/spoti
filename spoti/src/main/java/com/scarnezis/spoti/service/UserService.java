@@ -7,17 +7,20 @@ import com.scarnezis.spoti.persistance.entity.User;
 import com.scarnezis.spoti.persistance.mappers.UserMapper;
 import com.scarnezis.spoti.persistance.repository.DeviceRepository;
 import com.scarnezis.spoti.persistance.repository.UserRepository;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Data
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@Service
 public class UserService {
 
-  private UserRepository userRepository;
-  private DeviceRepository deviceRepository;
-  private UserMapper userMapper;
-  private SearchEntity searcherEntity;
+  private final UserRepository userRepository;
+  private final DeviceRepository deviceRepository;
+  private final UserMapper userMapper;
+  private final SearchEntity searcherEntity;
 
   public User signIn(UserInDTO userInDTO) throws NoSuchElementInTableException {
     User user = this.userMapper.userInDTOToUser(userInDTO);
@@ -30,10 +33,12 @@ public class UserService {
     this.deviceRepository.logOut(userId);
     Device device = searcherEntity.getDevice(deviceId);
     device.setUser(user);
+    this.deviceRepository.save(device);
   }
 
   public void logOut(Long deviceId) throws NoSuchElementInTableException {
     Device device = searcherEntity.getDevice(deviceId);
     device.logOut();
+    this.deviceRepository.save(device);
   }
 }

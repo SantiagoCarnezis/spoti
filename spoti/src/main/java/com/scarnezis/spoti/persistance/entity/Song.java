@@ -18,8 +18,10 @@ public class Song{
   @Id
   private String name;
   @Id
+  @Column(name = "artist_name")
+  private String artist_name;
   @ManyToOne
-  @JoinColumn(name = "artist_id")
+  @MapsId("artist_name")
   private Artist artist;
   @Enumerated
   private Gender gender;

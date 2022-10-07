@@ -7,18 +7,24 @@ import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.mappers.DeviceMapper;
 import com.scarnezis.spoti.persistance.mappers.SongMapper;
 import com.scarnezis.spoti.persistance.repository.DeviceRepository;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 
-
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@Service
 public class DeviceService {
 
-  private DeviceMapper mapper;
-  private SongMapper songMapper;
-  private DeviceRepository repository;
-  private SearchEntity searcherEntity;
-  private Reproductor reproductor;
+  private final DeviceMapper mapper;
+  private final SongMapper songMapper;
+  private final DeviceRepository repository;
+  private final SearchEntity searcherEntity;
+  private final Reproductor reproductor;
 
   @Transactional
   public void playSong(Long deviceId, SongId songId)  {
@@ -27,6 +33,7 @@ public class DeviceService {
     device.setPlayingSong(song);
     _addSongToQueue(device.getPlayQueue(), song);
     device.setReproductor(reproductor);
+    repository.save(device);
     //device.run();
   }
 
@@ -45,6 +52,7 @@ public class DeviceService {
     Device device = searcherEntity.getDevice(deviceId);
     Song song = searcherEntity.getSong(songId);
     this._addSongToQueue(device.getPlayQueue(), song);
+    repository.save(device);
   }
 
   @Transactional
@@ -58,6 +66,7 @@ public class DeviceService {
         map(Track::getSong).
         map(song -> songMapper.songToEnqueuedSong(song, device.getPlayQueue())).
         forEach(enqueuedSong -> device.getPlayQueue().addSong(enqueuedSong));
+    repository.save(device);
   }
 
   private void _addSongToQueue(PlayQueue playQueue, Song song) {

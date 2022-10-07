@@ -1,6 +1,8 @@
 package com.scarnezis.spoti.persistance.entity;
 
+import org.springframework.stereotype.Component;
 
+@Component
 public class Reproductor {
 
   private ExternalReproductor externalReproductor;
