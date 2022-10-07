@@ -3,6 +3,7 @@ package com.scarnezis.spoti.service;
 import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
 import com.scarnezis.spoti.persistance.dto.DeviceInDTO;
 import com.scarnezis.spoti.persistance.entity.*;
+import com.scarnezis.spoti.persistance.entity.id.PlaylistId;
 import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.mappers.DeviceMapper;
 import com.scarnezis.spoti.persistance.mappers.SongMapper;
@@ -56,7 +57,7 @@ public class DeviceService {
   }
 
   @Transactional
-  public void addPlaylistToQueue(Long deviceId, Long playlistId) throws NoSuchElementInTableException {
+  public void addPlaylistToQueue(Long deviceId, PlaylistId playlistId) throws NoSuchElementInTableException {
     Device device = searcherEntity.getDevice(deviceId);
     Playlist playlist = searcherEntity.getPlaylist(playlistId);
     playlist.

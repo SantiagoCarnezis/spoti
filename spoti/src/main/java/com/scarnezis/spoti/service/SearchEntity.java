@@ -3,6 +3,7 @@ package com.scarnezis.spoti.service;
 import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
 import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.entity.*;
+import com.scarnezis.spoti.persistance.entity.id.PlaylistId;
 import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class SearchEntity {
     return this.get(name, artistRepository, TableNames.ARTIST);
   }
 
-  public Playlist getPlaylist(Long playlistId) throws NoSuchElementInTableException {
+  public Playlist getPlaylist(PlaylistId playlistId) throws NoSuchElementInTableException {
     return this.get(playlistId, playlistRepository, TableNames.PLAYLIST);
   }
 

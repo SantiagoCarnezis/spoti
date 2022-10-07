@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/artist")
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
@@ -21,8 +24,7 @@ public class ArtistController {
   @PostMapping("/{artist_name}/song")
   public Song createSong(@RequestBody SongInDTO songInDTO,
                          @PathVariable("artist_name") String artistName){
-    Song song = this.songService.createSong(songInDTO, artistName);
-    return song;
+    return this.songService.createSong(songInDTO, artistName);
   }
 
   @PostMapping
@@ -31,7 +33,12 @@ public class ArtistController {
   }
 
   @GetMapping
-  public String getAll(){
-    return "Hola";
+  public List<Artist> getAll(@RequestParam("artist") Optional<String> optionalArtistName){
+    List<Artist> artists = null;
+    if(optionalArtistName.isPresent())
+      artists = artistService.findAllByName(optionalArtistName.get());
+    else
+      artists = artistService.findAll();
+    return artists;
   }
 }

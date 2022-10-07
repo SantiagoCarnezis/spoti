@@ -17,8 +17,7 @@ public class User {
   private Long id;
   @Column(nullable = false)
   private String name;
-  @OneToMany
-  @JoinColumn(name = "user", nullable = false)
+  @OneToMany(mappedBy = "user")
   private Set<Playlist> playlists;
   @Column(nullable = false)
   private String email;

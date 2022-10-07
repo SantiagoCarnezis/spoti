@@ -6,6 +6,7 @@ import com.scarnezis.spoti.persistance.entity.Playlist;
 import com.scarnezis.spoti.persistance.entity.Song;
 import com.scarnezis.spoti.persistance.entity.Track;
 import com.scarnezis.spoti.persistance.entity.User;
+import com.scarnezis.spoti.persistance.entity.id.PlaylistId;
 import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.mappers.PlaylistMapper;
 import com.scarnezis.spoti.persistance.mappers.SongMapper;
@@ -35,9 +36,9 @@ public class PlaylistService {
   }
 
   @Transactional
-  public void deletePlaylist(PlaylistInDTO playlistInDTO, Long userId) throws NoSuchElementInTableException {
-    User user = searcherEntity.getUser(userId);
-    Playlist playlist = this.playlistMapper.playlistInDTOToPlaylist(playlistInDTO);
+  public void deletePlaylist(PlaylistId playlistId) throws NoSuchElementInTableException {
+    Playlist playlist = this.searcherEntity.getPlaylist(playlistId);
+    User user = searcherEntity.getUser(playlistId.getUser_id());
     user.removePlaylist(playlist);
     this.playlistRepository.delete(playlist);
   }
@@ -47,17 +48,17 @@ public class PlaylistService {
   }
 
   @Transactional
-  public void addSong(SongId songId, Long playlistId, Long userId) throws NoSuchElementInTableException {
+  public void addSong(SongId songId, PlaylistId playlistId) throws NoSuchElementInTableException {
     Playlist playlist = searcherEntity.getPlaylist(playlistId);
-    Track track = _getTrack(songId, userId);
+    Track track = _getTrack(songId, playlistId.getUser_id());
     playlist.addSong(track);
     this.playlistRepository.save(playlist);
   }
 
   @Transactional
-  public void removeSong(SongId songId, Long playlistId, Long userId) throws NoSuchElementInTableException {
+  public void removeSong(SongId songId, PlaylistId playlistId) throws NoSuchElementInTableException {
     Playlist playlist = searcherEntity.getPlaylist(playlistId);
-    Track track = _getTrack(songId, userId);
+    Track track = _getTrack(songId, playlistId.getUser_id());
     playlist.removeSong(track);
     this.playlistRepository.save(playlist);
   }

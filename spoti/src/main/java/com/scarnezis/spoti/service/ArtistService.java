@@ -28,6 +28,8 @@ public class ArtistService {
     return this.repository.findAllByNameContaining(artistName);
   }
 
-
+  public List<Artist> findAll(){
+    return this.repository.findAll();
+  }
 }
 

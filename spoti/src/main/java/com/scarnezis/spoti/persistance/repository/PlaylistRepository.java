@@ -2,6 +2,7 @@ package com.scarnezis.spoti.persistance.repository;
 
 import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.entity.Playlist;
+import com.scarnezis.spoti.persistance.entity.id.PlaylistId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
+public interface PlaylistRepository extends JpaRepository<Playlist, PlaylistId> {
 
   //TODO is necessary?
   @Modifying

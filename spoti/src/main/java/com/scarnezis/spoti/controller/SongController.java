@@ -35,14 +35,24 @@ public class SongController {
   }
 
   @PatchMapping("/{artist}/{song}/like")
-  public void like(@PathVariable("artist") String artistName,
-                   @PathVariable("song") String songName){
-    this.service.likeSong(songName, artistName);
+  public void like(@PathVariable("artist") Optional<String> optionalArtistName,
+                   @PathVariable("song") Optional<String> optionalSongName){
+    Boolean hasSong = optionalSongName.isPresent();
+    Boolean hasArtist = optionalArtistName.isPresent();
+    if(hasSong && hasArtist)
+      this.service.likeSong(optionalSongName.get(), optionalArtistName.get());
+    //else
+      //TODO throw error
   }
 
   @PatchMapping("/{artist}/{song}/dislike")
-  public void dislike(@PathVariable("artist") String artistName,
-                   @PathVariable("song") String songName){
-    this.service.quitLikeSong(songName, artistName);
+  public void dislike(@PathVariable("artist") Optional<String> optionalArtistName,
+                      @PathVariable("song") Optional<String> optionalSongName){
+    Boolean hasSong = optionalSongName.isPresent();
+    Boolean hasArtist = optionalArtistName.isPresent();
+    if(hasSong && hasArtist)
+      this.service.quitLikeSong(optionalSongName.get(), optionalArtistName.get());
+    //else
+      //TODO throw error
   }
 }
