@@ -25,20 +25,26 @@ public class PlaylistController {
     return this.playlistService.createPlaylist(playlistInDTO, ownerId);
   }
 
-  @DeleteMapping("/{playlist_id}")
-  public void deletePlaylist(@PathVariable("playlist_id") PlaylistId playlistId){
+  @DeleteMapping("/{playlist_name}/user/{owner_id}")
+  public void deletePlaylist(@PathVariable("playlist_name") String playlistName,
+                             @PathVariable("owner_id") Long ownerId){
+    PlaylistId playlistId = new PlaylistId(playlistName, ownerId);
     this.playlistService.deletePlaylist(playlistId);
   }
 
-  @PutMapping("/{playlist_id}/song/{song_id}/add")
-  public void addSong(@PathVariable("playlist_id") PlaylistId playlistId,
-                      @PathVariable("song_id")SongId songId){
+  @PatchMapping("/{playlist_name}/user/{owner_id}/add")
+  public void addSong(@PathVariable("playlist_name") String playlistName,
+                      @PathVariable("owner_id") Long ownerId,
+                      @RequestBody SongId songId){
+    PlaylistId playlistId = new PlaylistId(playlistName, ownerId);
     this.playlistService.addSong(songId, playlistId);
   }
 
-  @PutMapping("/{playlist_id}/song/{song_id}/remove")
-  public void removeSong(@PathVariable("playlist_id") PlaylistId playlistId,
-                      @PathVariable("song_id")SongId songId){
+  @PatchMapping("/{playlist_name}/user/{owner_id}/remove")
+  public void removeSong(@PathVariable("playlist_name") String playlistName,
+                         @PathVariable("owner_id") Long ownerId,
+                         @RequestBody SongId songId){
+    PlaylistId playlistId = new PlaylistId(playlistName, ownerId);
     this.playlistService.removeSong(songId, playlistId);
   }
 
