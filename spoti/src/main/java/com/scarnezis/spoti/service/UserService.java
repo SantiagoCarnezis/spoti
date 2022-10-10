@@ -36,6 +36,7 @@ public class UserService {
     this.deviceRepository.save(device);
   }
 
+  @Transactional
   public void logOut(Long deviceId) throws NoSuchElementInTableException {
     Device device = searcherEntity.getDevice(deviceId);
     device.logOut();

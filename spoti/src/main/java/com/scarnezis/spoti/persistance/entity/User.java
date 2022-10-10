@@ -17,20 +17,10 @@ public class User {
   private Long id;
   @Column(nullable = false)
   private String name;
-  @OneToMany(mappedBy = "user")
-  private Set<Playlist> playlists;
   @Column(nullable = false)
   private String email;
   @Column(nullable = false)
-  private LocalDate birthdate;
+  private LocalDate birthday;
   @Column(nullable = false)
   private LocalDate registerDate;
-
-  public void addPlaylist(Playlist playlist){
-    playlists.add(playlist);
-  }
-
-  public void removePlaylist(Playlist playlist){
-    playlists.remove(playlist);
-  }
 }

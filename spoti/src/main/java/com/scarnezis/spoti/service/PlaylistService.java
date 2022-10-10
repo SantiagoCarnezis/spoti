@@ -30,21 +30,25 @@ public class PlaylistService {
   @Transactional
   public Playlist createPlaylist(PlaylistInDTO playlistInDTO, Long userId) throws NoSuchElementInTableException {
     User user = searcherEntity.getUser(userId);
+    //playlistInDTO.setUser(user);
     Playlist playlist = this.playlistMapper.playlistInDTOToPlaylist(playlistInDTO);
-    user.addPlaylist(playlist);
-    return this.playlistRepository.save(playlist);
+    playlist.setUser(user);
+    playlist.setUser_id(user.getId());
+    //user.addPlaylist(playlist);
+    Playlist playlistPersisted = this.playlistRepository.save(playlist);
+    return playlistPersisted;
+    //TODO no lo persiste, creo q hay un problema de recursisvidad con los setters
   }
 
   @Transactional
   public void deletePlaylist(PlaylistId playlistId) throws NoSuchElementInTableException {
     Playlist playlist = this.searcherEntity.getPlaylist(playlistId);
     User user = searcherEntity.getUser(playlistId.getUser_id());
-    user.removePlaylist(playlist);
     this.playlistRepository.delete(playlist);
   }
 
   public List<Playlist> findAllByUser(Long userId){
-    return this.playlistRepository.findAllByUser(userId);
+    return this.playlistRepository.findAllByUser_id(userId);
   }
 
   @Transactional

@@ -49,7 +49,7 @@ public class PlaylistController {
     List<Playlist> playlists = null;
     if(optionalPlaylistName.isPresent())
       playlists = playlistService.findAllByName(optionalPlaylistName.get());
-    else if(optionalPlaylistName.isPresent())
+    else if(optionalPlaylistOwner.isPresent())
       playlists = playlistService.findAllByUser(optionalPlaylistOwner.get());
     return playlists;
   }

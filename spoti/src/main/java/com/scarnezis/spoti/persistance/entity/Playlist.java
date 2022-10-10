@@ -35,4 +35,12 @@ public class  Playlist{
   public void removeSong(Track track) {
     tracks.remove(track);
   }
+
+  /*
+  public void setUser(User user){
+    this.user = user;
+    this.user_id = user.getId();
+  }
+  */
+
 }

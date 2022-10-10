@@ -1,6 +1,7 @@
 package com.scarnezis.spoti.persistance.dto;
 
 import com.scarnezis.spoti.persistance.entity.Track;
+import com.scarnezis.spoti.persistance.entity.User;
 import lombok.Data;
 
 import java.util.Collection;
@@ -9,6 +10,6 @@ import java.util.Collection;
 public class PlaylistInDTO {
 
   private String name;
-  private Collection<Track> tracks;
   private String description;
+  //private User user;
 }

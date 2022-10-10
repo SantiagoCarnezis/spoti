@@ -16,9 +16,9 @@ public interface PlaylistRepository extends JpaRepository<Playlist, PlaylistId> 
 
   //TODO is necessary?
   @Modifying
-  @Query(value = "SELECT * FROM " + TableNames.PLAYLIST + " WHERE user = :user_id",
+  @Query(value = "SELECT * FROM " + TableNames.PLAYLIST + " WHERE user_id = :user_id",
       nativeQuery = true)
-  List<Playlist> findAllByUser(@Param("user_id") Long userId);
+  List<Playlist> findAllByUser_id(@Param("user_id") Long userId);
 
   List<Playlist> findAllByNameContaining(String playlistName);
 }
