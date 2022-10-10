@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,14 +18,15 @@ public interface SongRepository extends JpaRepository<Song, SongId> {
 
   List<Song> findAllByNameContaining(String name);
 
-  List<Song> findAllByArtistContaining(String artistName);
+  List<Song> findAllByArtist_nameContaining(String artistName);
 
-  List<Song> findAllByNameAndArtist(String songName, String artistName);
+  List<Song> findAllByNameAndArtist_name(String songName, String artistName);
 
   @Modifying
+  @Transactional
   @Query(value = "UPDATE " + TableNames.SONG +
-      " SET numberOfLikes = :numberOfLikes WHERE name = :songName and artist = :artist",
+      " SET number_of_likes = :numberOfLikes WHERE name = :songName and artist_name = :artist",
       nativeQuery = true)
-  void setSongLike(@Param("songName") String songName, @Param("artist") Artist artist,
+  void setSongLike(@Param("songName") String songName, @Param("artist") String artist,
                    @Param("numberOfLikes") Integer numberOfLikes);
 }

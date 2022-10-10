@@ -1,13 +1,11 @@
 package com.scarnezis.spoti.service;
 
 import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
-import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.dto.SongInDTO;
 import com.scarnezis.spoti.persistance.entity.Artist;
 import com.scarnezis.spoti.persistance.entity.Song;
 import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.mappers.SongMapper;
-import com.scarnezis.spoti.persistance.repository.ArtistRepository;
 import com.scarnezis.spoti.persistance.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +36,11 @@ public class SongService {
   }
 
   public List<Song> findAllByArtist(String artistName) {
-    return this.songRepository.findAllByArtistContaining(artistName);
+    return this.songRepository.findAllByArtist_nameContaining(artistName);
   }
 
   public List<Song> findAllByNameAndArtist(String songName, String artistName){
-    return this.songRepository.findAllByNameAndArtist(songName, artistName);
+    return this.songRepository.findAllByNameAndArtist_name(songName, artistName);
   }
 
   public List<Song> findAll(){
@@ -64,7 +62,7 @@ public class SongService {
     //TODO maybe can use songId
     this.songRepository.setSongLike(
         song.getName(),
-        song.getArtist(),
+        song.getArtist().getName(),
         song.getNumberOfLikes() + number);
   }
 }
