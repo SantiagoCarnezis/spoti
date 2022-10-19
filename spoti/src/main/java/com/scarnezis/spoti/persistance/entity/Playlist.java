@@ -2,7 +2,6 @@ package com.scarnezis.spoti.persistance.entity;
 
 import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.entity.id.PlaylistId;
-import com.scarnezis.spoti.persistance.entity.id.SongId;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -36,11 +35,8 @@ public class  Playlist{
     tracks.remove(track);
   }
 
-  /*
-  public void setUser(User user){
-    this.user = user;
-    this.user_id = user.getId();
-  }
-  */
 
+  public PlaylistId getPlaylistId(){
+    return new PlaylistId(this.name, this.user_id);
+  }
 }

@@ -6,6 +6,7 @@ import com.scarnezis.spoti.persistance.mappers.ArtistMapper;
 import com.scarnezis.spoti.persistance.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +18,11 @@ public class ArtistService {
 
   private final ArtistMapper mapper;
   private final ArtistRepository repository;
+  private final SearchEntity searcherEntity;
 
   public Artist createArtist(ArtistInDTO artistInDTO){
-    //TODO check that not exists another artist, could do using aspects
     Artist artist = this.mapper.artistInDTOToArtist(artistInDTO);
+    searcherEntity.validateExistsArtist(artist.getName());
     return this.repository.save(artist);
   }
 

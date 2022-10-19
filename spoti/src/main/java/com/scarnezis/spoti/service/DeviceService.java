@@ -1,16 +1,13 @@
 package com.scarnezis.spoti.service;
 
 import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
-import com.scarnezis.spoti.persistance.dto.DeviceInDTO;
 import com.scarnezis.spoti.persistance.entity.*;
 import com.scarnezis.spoti.persistance.entity.id.PlaylistId;
 import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.mappers.DeviceMapper;
 import com.scarnezis.spoti.persistance.mappers.SongMapper;
 import com.scarnezis.spoti.persistance.repository.DeviceRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +22,7 @@ public class DeviceService {
   private final SongMapper songMapper;
   private final DeviceRepository repository;
   private final SearchEntity searcherEntity;
-  private final Reproductor reproductor;
+  private final Reproducer reproducer;
 
   @Transactional
   public void playSong(Long deviceId, SongId songId)  {
@@ -33,19 +30,35 @@ public class DeviceService {
     Song song = searcherEntity.getSong(songId);
     device.setPlayingSong(song);
     _addSongToQueue(device.getPlayQueue(), song);
-    device.setReproductor(reproductor);
+    reproducer.run(device);
     repository.save(device);
-    //device.run();
   }
 
-  public Device createDevice(DeviceInDTO deviceInDTO){
-    Device device = this.mapper.deviceInDTOToDevice(deviceInDTO);
+  @Transactional
+  public void play(Long deviceId)  {
+    Device device = searcherEntity.getDevice(deviceId);
+    reproducer.run(device);
+    repository.save(device);
+  }
+
+  @Transactional
+  public void pause(Long deviceId)  {
+    Device device = searcherEntity.getDevice(deviceId);
+    int pauseSecond = reproducer.stop(device);
+    device.setPlayingSongSeconds(pauseSecond);
+    repository.save(device);
+  }
+
+  public Device createDevice(){
+    Device device = this.mapper.deviceInDTOToDevice(1);
     return this.repository.save(device);
   }
 
+  @Transactional
   public void shuffleQueue(Long deviceId) throws NoSuchElementInTableException {
     Device device = searcherEntity.getDevice(deviceId);
     device.getPlayQueue().shuffle();
+    repository.save(device);
   }
 
   @Transactional

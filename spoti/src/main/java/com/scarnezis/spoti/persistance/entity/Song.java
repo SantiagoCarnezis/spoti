@@ -32,4 +32,7 @@ public class Song{
   @Column(nullable = false)
   private Integer numberOfLikes;
 
+  public SongId getSong_id(){
+    return new SongId(this.name, this.getArtist().getName());
+  }
 }

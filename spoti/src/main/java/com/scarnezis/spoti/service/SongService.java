@@ -27,6 +27,7 @@ public class SongService {
     Artist artist = searcherEntity.getArtist(artistName);
     songInDTO.setArtist(artist);
     Song song = this.mapper.songInDTOToSong(songInDTO);
+    searcherEntity.validateExistsSong(song.getSong_id());
     this.songRepository.save(song);
     return song;
   }
@@ -47,11 +48,11 @@ public class SongService {
     return this.songRepository.findAll();
   }
 
-  public void likeSong(String songName, String artistName) {
+  public void likeSong(String songName, String artistName) throws NoSuchElementInTableException{
     _setLikeSong(songName, artistName, 1);
   }
 
-  public void quitLikeSong(String songName, String artistName) {
+  public void quitLikeSong(String songName, String artistName) throws NoSuchElementInTableException{
     _setLikeSong(songName, artistName,-1);
   }
 
@@ -59,10 +60,10 @@ public class SongService {
   private void _setLikeSong(String songName, String artistName, Integer number) throws NoSuchElementInTableException {
     SongId songId = new SongId(songName, artistName);
     Song song = this.searcherEntity.getSong(songId);
-    //TODO maybe can use songId
+    int likes = Math.max(song.getNumberOfLikes() + number, 0);
     this.songRepository.setSongLike(
         song.getName(),
         song.getArtist().getName(),
-        song.getNumberOfLikes() + number);
+        likes);
   }
 }

@@ -1,5 +1,6 @@
 package com.scarnezis.spoti.controller;
 
+import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
 import com.scarnezis.spoti.persistance.entity.Song;
 import com.scarnezis.spoti.service.SearchEntity;
 import com.scarnezis.spoti.service.SongService;
@@ -37,7 +38,8 @@ public class SongController {
 
   @PatchMapping("/{song}/artist/{artist}/like")
   public void like(@PathVariable("artist") String artistName,
-                   @PathVariable("song") String songName){
+                   @PathVariable("song") String songName)
+      throws NoSuchElementInTableException {
 
     this.service.likeSong(songName, artistName);
     //else

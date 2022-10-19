@@ -1,5 +1,6 @@
 package com.scarnezis.spoti.service;
 
+import com.scarnezis.spoti.exceptions.AlreadyExistsElementException;
 import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
 import com.scarnezis.spoti.persistance.dto.PlaylistInDTO;
 import com.scarnezis.spoti.persistance.entity.Playlist;
@@ -28,16 +29,16 @@ public class PlaylistService {
   private final SearchEntity searcherEntity;
 
   @Transactional
-  public Playlist createPlaylist(PlaylistInDTO playlistInDTO, Long userId) throws NoSuchElementInTableException {
+  public Playlist createPlaylist(PlaylistInDTO playlistInDTO, Long userId)
+      throws NoSuchElementInTableException, AlreadyExistsElementException {
     User user = searcherEntity.getUser(userId);
     //playlistInDTO.setUser(user);
     Playlist playlist = this.playlistMapper.playlistInDTOToPlaylist(playlistInDTO);
     playlist.setUser(user);
     playlist.setUser_id(user.getId());
+    searcherEntity.validateExistsPlaylist(playlist.getPlaylistId());
     //user.addPlaylist(playlist);
-    Playlist playlistPersisted = this.playlistRepository.save(playlist);
-    return playlistPersisted;
-    //TODO no lo persiste, creo q hay un problema de recursisvidad con los setters
+    return this.playlistRepository.save(playlist);
   }
 
   @Transactional

@@ -2,6 +2,7 @@ package com.scarnezis.spoti.persistance.entity;
 
 import com.scarnezis.spoti.persistance.TableNames;
 import lombok.Data;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.time.LocalDate;

@@ -1,5 +1,6 @@
 package com.scarnezis.spoti.service;
 
+import com.scarnezis.spoti.exceptions.AlreadyExistsElementException;
 import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
 import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.entity.*;
@@ -10,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 @Component
@@ -43,13 +42,32 @@ public class SearchEntity {
     return this.get(songId, songRepository, TableNames.SONG);
   }
 
+  public void validateExistsArtist(String artistName) throws AlreadyExistsElementException {
+    this._validateExists(artistName, artistRepository, TableNames.ARTIST);
+  }
+
+  public void validateExistsPlaylist(PlaylistId playlistId) throws AlreadyExistsElementException {
+    this._validateExists(playlistId, playlistRepository, TableNames.PLAYLIST);
+  }
+
+  public void validateExistsSong(SongId songId) throws AlreadyExistsElementException {
+    this._validateExists(songId, songRepository, TableNames.SONG);
+  }
+
   private <E, ID> E get(ID id, JpaRepository<E, ID> repository, String tableName)
       throws NoSuchElementInTableException {
-    Optional<E> optional = repository.findById(id);
-    if(!optional.isPresent()){
-      String message = String.format("No se encontro el id %s en la tabla %s", id.toString(), tableName);
-      throw new NoSuchElementInTableException(message);
-    }
-    return optional.get();
+
+    String message = String.format("No such %s with id %s", tableName, id.toString());
+    return repository
+        .findById(id)
+        .orElseThrow(() -> new NoSuchElementInTableException(message));
+  }
+
+  private <E, ID> void _validateExists(ID id, JpaRepository<E, ID> repository, String tableName)
+      throws NoSuchElementInTableException {
+
+    String message = String.format("Already exists a %s with id %s", tableName, id.toString());
+    if( repository.existsById(id))
+      throw new AlreadyExistsElementException(message);
   }
 }

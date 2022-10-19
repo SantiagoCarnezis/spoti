@@ -2,7 +2,6 @@ package com.scarnezis.spoti.persistance.entity;
 
 import com.scarnezis.spoti.persistance.TableNames;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
@@ -14,8 +13,6 @@ public class Device {
   @Id
   @GeneratedValue
   private Long id;
-  @Transient
-  private Reproductor reproductor;
   @OneToOne
   private User user;
   @Embedded
@@ -37,15 +34,16 @@ public class Device {
   */
 
   //@Autowired
-  public void setReproductor(Reproductor reproductor){
-    this.reproductor = reproductor;
-  }
 
   public void logOut() {
-    setReproductor(null);
     setUser(null);
     setPlayQueue(null);
     setPlayingSong(null);
     setPlayingSongSeconds(null);
+  }
+
+  public void setNextSong() {
+    Song song = this.getPlayQueue().nextSong();
+    this.setPlayingSong(song);
   }
 }
