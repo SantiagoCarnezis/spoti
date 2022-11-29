@@ -33,7 +33,7 @@ public class DeviceController {
     this.userService.logOut(deviceId);
   }
 
-  @PatchMapping("/{device_id}/song/play")
+  @PatchMapping("/{device_id}/play")
   public void play(@PathVariable("device_id") Long deviceId,
                        @RequestBody(required = false) SongId songId){
     if(songId == null)

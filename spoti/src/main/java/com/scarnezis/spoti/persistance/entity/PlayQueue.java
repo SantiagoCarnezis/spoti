@@ -48,7 +48,7 @@ public class PlayQueue{
     Optional<EnqueuedSong> optionalEnqueuedSong = enqueuedSongs.
             stream().
             max(Comparator.comparing(EnqueuedSong::getIndex));
-    return optionalEnqueuedSong.isPresent()? optionalEnqueuedSong.get().getIndex()  :0;
+    return optionalEnqueuedSong.map(enqueuedSong -> enqueuedSong.getIndex() + 1).orElse(0);
   }
 
   public void shuffle(){
