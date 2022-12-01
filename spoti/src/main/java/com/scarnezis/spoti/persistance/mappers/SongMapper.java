@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public interface SongMapper {
 
   @Mapping(target = "releaseDate", expression = "java( LocalDate.now() ) ")
-  @Mapping(target = "numberOfLikes", constant = "0")
+  @Mapping(target = "countOfLikes", constant = "0")
   @Mapping(target = "artist_name", expression = "java( songInDTO.getArtist().getName() ) ")
   Song songInDTOToSong(SongInDTO songInDTO);
 

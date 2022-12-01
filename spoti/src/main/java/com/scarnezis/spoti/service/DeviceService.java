@@ -74,10 +74,8 @@ public class DeviceService {
     Device device = searcherEntity.getDevice(deviceId);
     Playlist playlist = searcherEntity.getPlaylist(playlistId);
     playlist.
-        getTracks().
+        getSongsForQueue().
         stream().
-        sorted(Comparator.comparing(Track::getAddedAt)).
-        map(Track::getSong).
         map(song -> songMapper.songToEnqueuedSong(song, device.getPlayQueue())).
         forEach(enqueuedSong -> device.getPlayQueue().addSong(enqueuedSong));
     repository.save(device);

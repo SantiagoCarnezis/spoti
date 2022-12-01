@@ -7,12 +7,14 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
 @Table(name = TableNames.PLAYLIST)
 @IdClass( value = PlaylistId.class)
-public class  Playlist{
+public class  Playlist implements Queueable{
 
   @Id
   private String name;
@@ -38,5 +40,13 @@ public class  Playlist{
 
   public PlaylistId getPlaylistId(){
     return new PlaylistId(this.name, this.user_id);
+  }
+
+  @Override
+  public Collection<Song> getSongsForQueue() {
+    return getTracks().
+        stream().
+        sorted(Comparator.comparing(Track::getAddedAt)).
+        map(Track::getSong).collect(Collectors.toList());
   }
 }

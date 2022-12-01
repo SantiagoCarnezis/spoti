@@ -7,13 +7,15 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayDeque;
+import java.util.Collection;
 
 @Setter
 @Getter
 @Entity
 @Table(name = TableNames.SONG)
 @IdClass( value = SongId.class)
-public class Song{
+public class Song implements Queueable{
 
   @Id
   private String name;
@@ -30,9 +32,16 @@ public class Song{
   @Column(nullable = false)
   private LocalDate releaseDate;
   @Column(nullable = false)
-  private Integer numberOfLikes;
+  private Integer countOfLikes;
 
   public SongId getSong_id(){
     return new SongId(this.name, this.getArtist().getName());
+  }
+
+  @Override
+  public Collection<Song> getSongsForQueue() {
+    Collection<Song> songs = new ArrayDeque<>();
+    songs.add(this);
+    return songs;
   }
 }
