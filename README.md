@@ -23,8 +23,8 @@ A lo largo del proyecto se aplican conocimientos sobre patrones de diseño (como
 ## Para probar
 
 Para que el sistema funcione se debe:
-Contar con una jdk 11, consultar documentación de java sobre como instalar
-Especificar los datos de conexión con la base de datos en el archivo properties, para ello recomiendo consultar la documentacion del drive de MySQL o guairse con el siguiente sitio https://www.baeldung.com/java-connect-mysql
+* Contar con una jdk 11, consultar documentación de java sobre como instalar
+* Especificar los datos de conexión con la base de datos en el archivo properties, para ello recomiendo consultar la documentacion del drive de MySQL o guairse con el siguiente sitio https://www.baeldung.com/java-connect-mysql
 
 
 ## API REST
