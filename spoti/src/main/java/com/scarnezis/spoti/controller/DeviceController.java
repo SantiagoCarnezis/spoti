@@ -22,18 +22,18 @@ public class DeviceController {
     return this.deviceService.createDevice();
   }
 
-  @PatchMapping("/{device_id}/user/{user_id}/login")
+  @PostMapping("/{device_id}/user/{user_id}/login")
   public void logIn(@PathVariable("device_id") Long deviceId,
                     @PathVariable("user_id") Long userId){
     this.userService.logIn(deviceId, userId);
   }
 
-  @PatchMapping("/{device_id}/logout")
+  @PostMapping("/{device_id}/logout")
   public void logOut(@PathVariable("device_id") Long deviceId){
     this.userService.logOut(deviceId);
   }
 
-  @PatchMapping("/{device_id}/play")
+  @PostMapping("/{device_id}/play")
   public void play(@PathVariable("device_id") Long deviceId,
                        @RequestBody(required = false) SongId songId){
     if(songId == null)
@@ -42,12 +42,12 @@ public class DeviceController {
       this.deviceService.playSong(deviceId, songId);
   }
 
-  @PatchMapping("/{device_id}/pause")
+  @PostMapping("/{device_id}/pause")
   public void pause(@PathVariable("device_id") Long deviceId){
     this.deviceService.pause(deviceId);
   }
 
-  @PatchMapping("/{device_id}/queue/shuffle")
+  @PostMapping("/{device_id}/queue/shuffle")
   public void shuffle(@PathVariable("device_id") Long deviceId){
     this.deviceService.shuffleQueue(deviceId);
   }
