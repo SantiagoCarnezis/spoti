@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SongRepository extends JpaRepository<Song, SongId> {
@@ -28,5 +29,5 @@ public interface SongRepository extends JpaRepository<Song, SongId> {
       " SET number_of_likes = :numberOfLikes WHERE name = :songName and artist_name = :artist",
       nativeQuery = true)
   void setSongLike(@Param("songName") String songName, @Param("artist") String artist,
-                   @Param("numberOfLikes") Integer numberOfLikes);
+                             @Param("numberOfLikes") Integer numberOfLikes);
 }

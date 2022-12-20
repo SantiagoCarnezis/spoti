@@ -2,8 +2,7 @@ package com.scarnezis.spoti.persistance.entity;
 
 import com.scarnezis.spoti.persistance.TableNames;
 import com.scarnezis.spoti.persistance.entity.id.SongId;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +12,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = TableNames.SONG)
 @IdClass( value = SongId.class)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Song{
 
   @Id

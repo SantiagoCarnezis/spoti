@@ -1,12 +1,16 @@
 package com.scarnezis.spoti.persistance.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 public class Track {
 
   @ManyToOne

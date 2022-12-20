@@ -8,6 +8,7 @@ import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.persistance.mappers.SongMapper;
 import com.scarnezis.spoti.persistance.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@Setter
 @Service
 public class SongService {
 
@@ -48,22 +50,20 @@ public class SongService {
     return this.songRepository.findAll();
   }
 
-  public void likeSong(String songName, String artistName) throws NoSuchElementInTableException{
-    _setLikeSong(songName, artistName, 1);
+  public Song likeSong(String songName, String artistName) throws NoSuchElementInTableException{
+    return _setLikeSong(songName, artistName, 1);
   }
 
-  public void quitLikeSong(String songName, String artistName) throws NoSuchElementInTableException{
-    _setLikeSong(songName, artistName,-1);
+  public Song quitLikeSong(String songName, String artistName) throws NoSuchElementInTableException{
+    return _setLikeSong(songName, artistName,-1);
   }
 
   @Transactional
-  private void _setLikeSong(String songName, String artistName, Integer number) throws NoSuchElementInTableException {
+  private Song _setLikeSong(String songName, String artistName, Integer number) throws NoSuchElementInTableException {
     SongId songId = new SongId(songName, artistName);
     Song song = this.searcherEntity.getSong(songId);
     int likes = Math.max(song.getNumberOfLikes() + number, 0);
-    this.songRepository.setSongLike(
-        song.getName(),
-        song.getArtist().getName(),
-        likes);
+    song.setNumberOfLikes(likes);
+    return this.songRepository.save(song);
   }
 }

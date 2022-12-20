@@ -1,7 +1,9 @@
 package com.scarnezis.spoti.persistance.entity;
 
 import com.scarnezis.spoti.persistance.TableNames;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.*;
@@ -9,6 +11,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Embeddable
+@AllArgsConstructor
 public class PlayQueue{
 
   @ElementCollection

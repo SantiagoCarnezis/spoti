@@ -1,11 +1,15 @@
 package com.scarnezis.spoti.persistance.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 public class EnqueuedSong {
 
   @ManyToOne

@@ -2,7 +2,6 @@ package com.scarnezis.spoti.controller;
 
 import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
 import com.scarnezis.spoti.persistance.entity.Song;
-import com.scarnezis.spoti.service.SearchEntity;
 import com.scarnezis.spoti.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,26 +31,21 @@ public class SongController {
       songs = this.service.findAllByArtist(optionalArtistName.get());
     else
       songs = this.service.findAll();
-    System.out.println("songs: " + songs);
     return songs;
   }
 
   @PatchMapping("/{song}/artist/{artist}/like")
-  public void like(@PathVariable("artist") String artistName,
+  public Song like(@PathVariable("artist") String artistName,
                    @PathVariable("song") String songName)
       throws NoSuchElementInTableException {
 
-    this.service.likeSong(songName, artistName);
-    //else
-      //TODO throw error
+    return this.service.likeSong(songName, artistName);
   }
 
   @PatchMapping("/{song}/artist/{artist}/dislike")
-  public void dislike(@PathVariable("artist") String artistName,
+  public Song dislike(@PathVariable("artist") String artistName,
                       @PathVariable("song") String songName){
 
-    this.service.quitLikeSong(songName, artistName);
-    //else
-      //TODO throw error
+    return this.service.quitLikeSong(songName, artistName);
   }
 }
