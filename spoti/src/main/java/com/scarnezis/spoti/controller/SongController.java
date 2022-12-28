@@ -5,6 +5,7 @@ import com.scarnezis.spoti.persistance.entity.Song;
 import com.scarnezis.spoti.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class SongController {
   private final SongService service;
 
   @GetMapping
-  public List<Song> getAll(@RequestParam("name") Optional<String> optionalSongName,
+  public ResponseEntity<List<Song>> getAll(@RequestParam("name") Optional<String> optionalSongName,
                            @RequestParam("artist") Optional<String> optionalArtistName){
     Boolean hasSong = optionalSongName.isPresent();
     Boolean hasArtist = optionalArtistName.isPresent();
@@ -31,21 +32,23 @@ public class SongController {
       songs = this.service.findAllByArtist(optionalArtistName.get());
     else
       songs = this.service.findAll();
-    return songs;
+    if(songs.isEmpty())
+      return ResponseEntity.noContent().build();
+    return ResponseEntity.ok(songs);
   }
 
   @PatchMapping("/{song}/artist/{artist}/like")
-  public Song like(@PathVariable("artist") String artistName,
-                   @PathVariable("song") String songName)
+  public ResponseEntity<Song> like(@PathVariable("artist") String artistName,
+                                  @PathVariable("song") String songName)
       throws NoSuchElementInTableException {
 
-    return this.service.likeSong(songName, artistName);
+    return ResponseEntity.ok(this.service.likeSong(songName, artistName));
   }
 
   @PatchMapping("/{song}/artist/{artist}/dislike")
-  public Song dislike(@PathVariable("artist") String artistName,
+  public ResponseEntity<Song> dislike(@PathVariable("artist") String artistName,
                       @PathVariable("song") String songName){
 
-    return this.service.quitLikeSong(songName, artistName);
+    return ResponseEntity.ok(this.service.quitLikeSong(songName, artistName));
   }
 }

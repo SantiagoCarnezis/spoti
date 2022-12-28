@@ -32,12 +32,10 @@ public class PlaylistService {
   public Playlist createPlaylist(PlaylistInDTO playlistInDTO, Long userId)
       throws NoSuchElementInTableException, AlreadyExistsElementException {
     User user = searcherEntity.getUser(userId);
-    //playlistInDTO.setUser(user);
     Playlist playlist = this.playlistMapper.playlistInDTOToPlaylist(playlistInDTO);
     playlist.setUser(user);
     playlist.setUser_id(user.getId());
     searcherEntity.validateExistsPlaylist(playlist.getPlaylistId());
-    //user.addPlaylist(playlist);
     return this.playlistRepository.save(playlist);
   }
 

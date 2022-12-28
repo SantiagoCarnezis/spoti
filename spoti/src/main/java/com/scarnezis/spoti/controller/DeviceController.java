@@ -7,6 +7,7 @@ import com.scarnezis.spoti.service.DeviceService;
 import com.scarnezis.spoti.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,8 +19,8 @@ public class DeviceController {
   private final UserService userService;
 
   @PostMapping
-  public Device createDevice(){
-    return this.deviceService.createDevice();
+  public ResponseEntity<Device> createDevice(){
+    return ResponseEntity.ok(this.deviceService.createDevice());
   }
 
   @PostMapping("/{device_id}/user/{user_id}/login")

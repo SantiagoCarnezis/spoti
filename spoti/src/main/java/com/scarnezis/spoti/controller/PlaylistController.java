@@ -7,6 +7,7 @@ import com.scarnezis.spoti.persistance.entity.id.SongId;
 import com.scarnezis.spoti.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +21,9 @@ public class PlaylistController {
   private final PlaylistService playlistService;
 
   @PostMapping("/user/{owner_id}")
-  public Playlist createPlaylist(@RequestBody PlaylistInDTO playlistInDTO,
-                                 @PathVariable("owner_id") Long ownerId){
-    return this.playlistService.createPlaylist(playlistInDTO, ownerId);
+  public ResponseEntity<Playlist> createPlaylist(@RequestBody PlaylistInDTO playlistInDTO,
+                                                 @PathVariable("owner_id") Long ownerId){
+    return ResponseEntity.ok(this.playlistService.createPlaylist(playlistInDTO, ownerId));
   }
 
   @DeleteMapping("/{playlist_name}/user/{owner_id}")
@@ -49,7 +50,7 @@ public class PlaylistController {
   }
 
   @GetMapping
-  public List<Playlist> getAll(
+  public ResponseEntity<List<Playlist>> getAll(
       @RequestParam("playlist_name") Optional<String> optionalPlaylistName,
       @RequestParam("owner_id") Optional<Long> optionalPlaylistOwner){
     List<Playlist> playlists = null;
@@ -57,6 +58,8 @@ public class PlaylistController {
       playlists = playlistService.findAllByName(optionalPlaylistName.get());
     else if(optionalPlaylistOwner.isPresent())
       playlists = playlistService.findAllByUser(optionalPlaylistOwner.get());
-    return playlists;
+    if (playlists.isEmpty())
+      return ResponseEntity.noContent().build();
+    return ResponseEntity.ok(playlists);
   }
 }

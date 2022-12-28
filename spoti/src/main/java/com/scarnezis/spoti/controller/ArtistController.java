@@ -8,6 +8,7 @@ import com.scarnezis.spoti.service.ArtistService;
 import com.scarnezis.spoti.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,23 +23,25 @@ public class ArtistController {
   private final ArtistService artistService;
 
   @PostMapping("/{artist_name}/song")
-  public Song createSong(@RequestBody SongInDTO songInDTO,
-                         @PathVariable("artist_name") String artistName){
-    return this.songService.createSong(songInDTO, artistName);
+  public ResponseEntity<Song> createSong(@RequestBody SongInDTO songInDTO,
+                                        @PathVariable("artist_name") String artistName){
+    return ResponseEntity.ok(this.songService.createSong(songInDTO, artistName));
   }
 
   @PostMapping
-  public Artist createArtist(@RequestBody ArtistInDTO artistInDTO){
-    return this.artistService.createArtist(artistInDTO);
+  public ResponseEntity<Artist> createArtist(@RequestBody ArtistInDTO artistInDTO){
+    return ResponseEntity.ok(this.artistService.createArtist(artistInDTO));
   }
 
   @GetMapping
-  public List<Artist> getAll(@RequestParam("artist") Optional<String> optionalArtistName){
+  public ResponseEntity<List<Artist>> getAll(@RequestParam("artist") Optional<String> optionalArtistName){
     List<Artist> artists = null;
     if(optionalArtistName.isPresent())
       artists = artistService.findAllByName(optionalArtistName.get());
     else
       artists = artistService.findAll();
-    return artists;
+    if (artists.isEmpty())
+      return ResponseEntity.noContent().build();
+    return ResponseEntity.ok(artists);
   }
 }
