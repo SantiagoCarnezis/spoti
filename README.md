@@ -1,33 +1,33 @@
-## Introducción
+## Introduction
 
-El proyecto está basado en la plataforma multimedia Spotify y busca simular algunas funcionalidades que se pueden hacer dentro de la app original, por ejemplo, subir una canción nueva, crear una playlist y reproducir una canción.
+The project is based on the Spotify multimedia platform and seeks to simulate some functionalities that can be done within the original app, for example, upload a new song, create a playlist and play a song.
 
 
-## Sobre el desarrollo
+## About development
 
-El desarrollo es 100% back-end y para comunicarse con el sistema se utiliza una API REST (documentada con Sagger). Como lenguaje de programación utilice Java 11 en conjunto con Spring boot 2.5 y como base de datos use MySQL. 
-A lo largo del proyecto se aplican conocimientos sobre patrones de diseño (como DTO, composite, adapter y singleton), mapeo de clases java a tablas de la BD, protocolo http, manejo de colecciones, principios SOLID.
+At the moment the development is only back-end and to communicate with the system a REST API is used (documentada con Sagger).As programming language use Java 11 together with Spring boot 2.5 and MySQL as database.
+Throughout the project I apply knowledge about design patterns (such as DTO, composite, adapter and singleton), mapping java classes to database tables, http protocol, collection management, SOLID principles.
 
 
 ## Funcionalidades
 
-* Sign up, log in, log out en un dispositivo
-* Crear playlists
-* Agregar canciones a la playlist
-* Reproducir una canción o una playlist completa
-* Manejar su cola de reproducción (agregar canciones/playlists o mezclarla)
-* Registrar artistas
-* Subir una cancion de un artista
+* Sign up, log in, log out
+* Create playlist
+* Add song to playlist
+* Play song or playlist
+* Manage play queue (add songs/playlists or shuffle)
+* Register artist
+* Upload song
 
 
-## Para probar
+## For running
 
-Para que el sistema funcione se debe:
-* Contar con una jdk 11, consultar documentación de java sobre como instalar
-* Especificar los datos de conexión con la base de datos en el archivo properties, para ello recomiendo consultar la documentacion del drive de MySQL o guairse con el siguiente sitio https://www.baeldung.com/java-connect-mysql
+For the system to work you must:
+* Have a jdk 11, consult java documentation on how to install
+* Specify the connection data with the database in the properties file, for this I recommend consulting the documentation of the MySQL drive or using the following site https://www.baeldung.com/java-connect-mysql. In the project properties file there is already a possible configuration, it only remains to create the schema in the DB
 
 
 ## API REST
 
-Actualmente la API sigue en desarrollo, por lo tanto no todas las funcionalidades están implementadas (login, play, pause).
-Para ver la documentación de los endpoints correr el sistema y entrar en http://localhost:8080/swagger-ui.html
+The API is currently still under development, therefore not all features are implemented (login, play, pause).
+To see the documentation of the endpoints, run the system and enter http://localhost:8080/swagger-ui.html
