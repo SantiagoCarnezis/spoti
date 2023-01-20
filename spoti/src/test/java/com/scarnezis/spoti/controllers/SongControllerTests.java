@@ -1,9 +1,9 @@
 package com.scarnezis.spoti.controllers;
 
 import com.scarnezis.spoti.controller.SongController;
-import com.scarnezis.spoti.persistance.entity.Artist;
-import com.scarnezis.spoti.persistance.entity.Gender;
-import com.scarnezis.spoti.persistance.entity.Song;
+import com.scarnezis.spoti.domain.Artist;
+import com.scarnezis.spoti.domain.Gender;
+import com.scarnezis.spoti.domain.Song;
 import com.scarnezis.spoti.service.SongService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,9 +12,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
@@ -50,16 +52,16 @@ public class SongControllerTests {
         LocalDate.of(1973, Month.JANUARY, 1), LocalDate.now());
 
     eyeOfTheTiger = new Song("Eye of the Tiger", survivor.getName(),
-        survivor, Gender.ROCK, 100, LocalDate.now(), 1) ;
+        survivor, Gender.ROCK, Duration.ofSeconds(100), LocalDate.now(), 1) ;
 
     burningHeart = new Song("Burning Heart", survivor.getName(),
-        survivor, Gender.ROCK, 100, LocalDate.now(), 0);
+        survivor, Gender.ROCK, Duration.ofSeconds(100), LocalDate.now(), 0);
 
     highwayToTiger = new Song("Highway to Tiger", acdc.getName(),
-        acdc, Gender.ROCK, 100, LocalDate.now(), 0) ;
+        acdc, Gender.ROCK, Duration.ofSeconds(100), LocalDate.now(), 0) ;
 
     backInBlack = new Song("Back in Black", acdc.getName(),
-        acdc, Gender.ROCK, 100, LocalDate.now(), 0);
+        acdc, Gender.ROCK, Duration.ofSeconds(100), LocalDate.now(), 0);
 
     allSongs = Arrays.asList(eyeOfTheTiger, burningHeart, highwayToTiger, backInBlack);
   }
@@ -117,7 +119,7 @@ public class SongControllerTests {
   @Test
   public void getAllSongsFilterBySongAndArtist() throws Exception {
 
-    Mockito.when(songService.findAllByNameAndArtist("Tiger", "Survivor"))
+    Mockito.when(songService.findAllByNameAndArtist("Tiger", "Survivor", 0, 5))
         .thenReturn(allSongs.stream().filter(
             song -> song.getArtist_name().equalsIgnoreCase("Survivor")
                 && song.getName().contains("Tiger") )
@@ -135,7 +137,7 @@ public class SongControllerTests {
   public void whenSongIsLikedIncreaseCountOfLikes() throws Exception {
 
     Song eyeOfTheTigerIncreased = eyeOfTheTiger;
-    eyeOfTheTigerIncreased.setNumberOfLikes(eyeOfTheTigerIncreased.getNumberOfLikes() + 1);
+    eyeOfTheTigerIncreased.setLikesCounter(eyeOfTheTigerIncreased.getLikesCounter() + 1);
 
     Mockito.when(songService.likeSong("Eye of the Tiger", "Survivor"))
         .thenReturn(eyeOfTheTigerIncreased);
@@ -144,14 +146,14 @@ public class SongControllerTests {
         .andExpect(status().is(200))
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.name", Matchers.is(eyeOfTheTigerIncreased.getName())))
-        .andExpect(jsonPath("$.numberOfLikes", Matchers.is(2)));
+        .andExpect(jsonPath("$.likesCounter", Matchers.is(2)));
   }
 
   @Test
   public void whenSongIsDislikedDecreaseCountOfLikes() throws Exception {
 
     Song eyeOfTheTigerDecreased = eyeOfTheTiger;
-    eyeOfTheTigerDecreased.setNumberOfLikes(eyeOfTheTigerDecreased.getNumberOfLikes() - 1);
+    eyeOfTheTigerDecreased.setLikesCounter(eyeOfTheTigerDecreased.getLikesCounter() - 1);
 
     Mockito.when(songService.quitLikeSong("Eye of the Tiger", "Survivor"))
         .thenReturn(eyeOfTheTigerDecreased);
@@ -160,6 +162,8 @@ public class SongControllerTests {
         .andExpect(status().is(200))
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.name", Matchers.is("Eye of the Tiger")))
-        .andExpect(jsonPath("$.numberOfLikes", Matchers.is(0)));
+        .andExpect(jsonPath("$.likesCounter", Matchers.is(0)));
   }
+
+
 }

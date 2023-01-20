@@ -1,18 +1,20 @@
 package com.scarnezis.spoti.controller;
 
-import com.scarnezis.spoti.persistance.dto.ArtistInDTO;
-import com.scarnezis.spoti.persistance.dto.SongInDTO;
-import com.scarnezis.spoti.persistance.entity.Artist;
-import com.scarnezis.spoti.persistance.entity.Song;
+import com.scarnezis.spoti.dto.ArtistInDTO;
+import com.scarnezis.spoti.dto.SongInDTO;
+import com.scarnezis.spoti.domain.Artist;
+import com.scarnezis.spoti.domain.Song;
 import com.scarnezis.spoti.service.ArtistService;
 import com.scarnezis.spoti.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/artist")
@@ -34,14 +36,20 @@ public class ArtistController {
   }
 
   @GetMapping
-  public ResponseEntity<List<Artist>> getAll(@RequestParam("artist") Optional<String> optionalArtistName){
-    List<Artist> artists = null;
-    if(optionalArtistName.isPresent())
-      artists = artistService.findAllByName(optionalArtistName.get());
+  public Page<Artist> getAll(@RequestParam(value = "artist", required = false) String artistName,
+                             @RequestParam(value = "offset", required = false) Integer offset,
+                             @RequestParam(value = "page_size") Integer pageSize){
+
+    Page<Artist> artists = null;
+    if(artistName != null)
+      artists = artistService.findAllByName(artistName, offset, pageSize);
     else
-      artists = artistService.findAll();
-    if (artists.isEmpty())
-      return ResponseEntity.noContent().build();
-    return ResponseEntity.ok(artists);
+      artists = artistService.findAll(offset, pageSize);
+    return artists;
+  }
+
+  @GetMapping("/{artist_name}")
+  public ResponseEntity<Artist> getArtist(@PathVariable("artist_name") String artistName){
+    return ResponseEntity.ok(artistService.get(artistName));
   }
 }

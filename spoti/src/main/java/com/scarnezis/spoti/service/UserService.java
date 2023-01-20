@@ -1,45 +1,32 @@
 package com.scarnezis.spoti.service;
 
-import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
-import com.scarnezis.spoti.persistance.dto.UserInDTO;
-import com.scarnezis.spoti.persistance.entity.Device;
-import com.scarnezis.spoti.persistance.entity.User;
-import com.scarnezis.spoti.persistance.mappers.UserMapper;
-import com.scarnezis.spoti.persistance.repository.DeviceRepository;
-import com.scarnezis.spoti.persistance.repository.UserRepository;
+import com.scarnezis.spoti.exceptions.ResourceAlreadyExistsException;
+import com.scarnezis.spoti.exceptions.ResourceNotFoundException;
+import com.scarnezis.spoti.dto.UserInDTO;
+import com.scarnezis.spoti.domain.User;
+import com.scarnezis.spoti.mappers.UserMapper;
+import com.scarnezis.spoti.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 @Service
 public class UserService {
 
-  private final UserRepository userRepository;
-  private final DeviceRepository deviceRepository;
+  private final UserRepository repository;
   private final UserMapper userMapper;
-  private final SearchEntity searcherEntity;
 
-  public User signIn(UserInDTO userInDTO) throws NoSuchElementInTableException {
+  public User get(Long userId) {
+    return repository
+        .findById(userId)
+        .orElseThrow(() ->
+            new ResourceNotFoundException("User " + userId));
+  }
+
+  public User signIn(UserInDTO userInDTO) throws ResourceNotFoundException {
     User user = this.userMapper.userInDTOToUser(userInDTO);
-    return this.userRepository.save(user);
-  }
-
-  @Transactional
-  public void logIn(Long deviceId, Long userId) throws NoSuchElementInTableException {
-    User user = searcherEntity.getUser(userId);
-    this.deviceRepository.logOut(userId);
-    Device device = searcherEntity.getDevice(deviceId);
-    device.setUser(user);
-    this.deviceRepository.save(device);
-  }
-
-  @Transactional
-  public void logOut(Long deviceId) throws NoSuchElementInTableException {
-    Device device = searcherEntity.getDevice(deviceId);
-    device.logOut();
-    this.deviceRepository.save(device);
+    return this.repository.save(user);
   }
 }

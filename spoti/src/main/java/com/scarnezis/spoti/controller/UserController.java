@@ -1,15 +1,12 @@
 package com.scarnezis.spoti.controller;
 
-import com.scarnezis.spoti.persistance.dto.UserInDTO;
-import com.scarnezis.spoti.persistance.entity.Playlist;
-import com.scarnezis.spoti.persistance.entity.User;
+import com.scarnezis.spoti.dto.UserInDTO;
+import com.scarnezis.spoti.domain.User;
 import com.scarnezis.spoti.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -22,5 +19,10 @@ public class UserController {
   @PostMapping
   public User signIn(@RequestBody UserInDTO userInDTO){
     return this.userService.signIn(userInDTO);
+  }
+
+  @GetMapping("/{user_id}")
+  public ResponseEntity<User> getUser(@PathVariable("user_id") Long userId){
+    return ResponseEntity.ok(userService.get(userId));
   }
 }

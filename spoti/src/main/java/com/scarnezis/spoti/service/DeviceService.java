@@ -1,12 +1,13 @@
 package com.scarnezis.spoti.service;
 
-import com.scarnezis.spoti.exceptions.NoSuchElementInTableException;
-import com.scarnezis.spoti.persistance.entity.*;
-import com.scarnezis.spoti.persistance.entity.id.PlaylistId;
-import com.scarnezis.spoti.persistance.entity.id.SongId;
-import com.scarnezis.spoti.persistance.mappers.DeviceMapper;
-import com.scarnezis.spoti.persistance.mappers.SongMapper;
-import com.scarnezis.spoti.persistance.repository.DeviceRepository;
+import com.scarnezis.spoti.exceptions.ResourceAlreadyExistsException;
+import com.scarnezis.spoti.exceptions.ResourceNotFoundException;
+import com.scarnezis.spoti.domain.*;
+import com.scarnezis.spoti.domain.id.PlaylistId;
+import com.scarnezis.spoti.domain.id.SongId;
+import com.scarnezis.spoti.mappers.DeviceMapper;
+import com.scarnezis.spoti.mappers.SongMapper;
+import com.scarnezis.spoti.repository.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,58 +22,89 @@ public class DeviceService {
   private final DeviceMapper mapper;
   private final SongMapper songMapper;
   private final DeviceRepository repository;
-  private final SearchEntity searcherEntity;
   private final Reproducer reproducer;
+  private final SongService songService;
+  private final PlaylistService playlistService;
+  private final UserService userService;
+
 
   @Transactional
-  public void playSong(Long deviceId, SongId songId)  {
-    Device device = searcherEntity.getDevice(deviceId);
-    Song song = searcherEntity.getSong(songId);
+  public void playSong(Long deviceId, SongId songId) throws InterruptedException {
+    Device device = this.get(deviceId);
+    Song song = songService.get(songId);
     device.setPlayingSong(song);
     _addSongToQueue(device.getPlayQueue(), song);
     reproducer.run(device);
     repository.save(device);
   }
 
+  public Device get(Long deviceId) {
+    return repository
+        .findById(deviceId)
+        .orElseThrow(() ->
+            new ResourceNotFoundException("Device " + deviceId));
+  }
+
+  public void validateExists(Long deviceId) {
+    if (repository.existsById(deviceId))
+      throw new ResourceAlreadyExistsException(deviceId.toString());
+  }
+
   @Transactional
-  public void play(Long deviceId)  {
-    Device device = searcherEntity.getDevice(deviceId);
+  public void play(Long deviceId) throws InterruptedException {
+    Device device = this.get(deviceId);
     reproducer.run(device);
     repository.save(device);
   }
 
   @Transactional
-  public void pause(Long deviceId)  {
-    Device device = searcherEntity.getDevice(deviceId);
+  public void pause(Long deviceId) {
+    Device device = this.get(deviceId);
     int pauseSecond = reproducer.stop(device);
     device.setPlayingSongSeconds(pauseSecond);
     repository.save(device);
   }
 
-  public Device createDevice(){
+  public Device createDevice() {
     Device device = this.mapper.deviceInDTOToDevice(1);
     return this.repository.save(device);
   }
 
   @Transactional
-  public void shuffleQueue(Long deviceId) throws NoSuchElementInTableException {
-    Device device = searcherEntity.getDevice(deviceId);
+  public void logIn(Long deviceId, Long userId) throws ResourceNotFoundException {
+    User user = userService.get(userId);
+    this.repository.logOut(userId);
+    Device device = this.get(deviceId);
+    device.setUser(user);
+    this.repository.save(device);
+  }
+
+  @Transactional
+  public void logOut(Long deviceId) throws ResourceNotFoundException {
+    Device device = this.get(deviceId);
+    device.logOut();
+    this.repository.save(device);
+  }
+
+  @Transactional
+  public void shuffleQueue(Long deviceId) throws ResourceNotFoundException {
+    Device device = this.get(deviceId);
     device.getPlayQueue().shuffle();
     repository.save(device);
   }
 
   @Transactional
-  public void addSongToQueue(Long deviceId, SongId songId) throws NoSuchElementInTableException {
-    Device device = searcherEntity.getDevice(deviceId);
-    Song song = searcherEntity.getSong(songId);
+  public void addSongToQueue(Long deviceId, SongId songId) throws ResourceNotFoundException {
+    Device device = this.get(deviceId);
+    Song song = songService.get(songId);
     this._addSongToQueue(device.getPlayQueue(), song);
     repository.save(device);
   }
 
   @Transactional
-  public void addPlaylistToQueue(Long deviceId, PlaylistId playlistId) throws NoSuchElementInTableException {
-    Device device = searcherEntity.getDevice(deviceId);
-    Playlist playlist = searcherEntity.getPlaylist(playlistId);
+  public void addPlaylistToQueue(Long deviceId, PlaylistId playlistId) throws ResourceNotFoundException {
+    Device device = this.get(deviceId);
+    Playlist playlist = playlistService.get(playlistId);
     playlist.
         getTracks().
         stream().

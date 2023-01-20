@@ -1,8 +1,8 @@
 package com.scarnezis.spoti.controller;
 
-import com.scarnezis.spoti.persistance.entity.Device;
-import com.scarnezis.spoti.persistance.entity.id.PlaylistId;
-import com.scarnezis.spoti.persistance.entity.id.SongId;
+import com.scarnezis.spoti.domain.Device;
+import com.scarnezis.spoti.domain.id.PlaylistId;
+import com.scarnezis.spoti.domain.id.SongId;
 import com.scarnezis.spoti.service.DeviceService;
 import com.scarnezis.spoti.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class DeviceController {
 
   private final DeviceService deviceService;
-  private final UserService userService;
 
   @PostMapping
   public ResponseEntity<Device> createDevice(){
@@ -26,17 +25,17 @@ public class DeviceController {
   @PostMapping("/{device_id}/user/{user_id}/login")
   public void logIn(@PathVariable("device_id") Long deviceId,
                     @PathVariable("user_id") Long userId){
-    this.userService.logIn(deviceId, userId);
+    this.deviceService.logIn(deviceId, userId);
   }
 
   @PostMapping("/{device_id}/logout")
   public void logOut(@PathVariable("device_id") Long deviceId){
-    this.userService.logOut(deviceId);
+    this.deviceService.logOut(deviceId);
   }
 
   @PostMapping("/{device_id}/play")
   public void play(@PathVariable("device_id") Long deviceId,
-                       @RequestBody(required = false) SongId songId){
+                       @RequestBody(required = false) SongId songId) throws InterruptedException {
     if(songId == null)
       this.deviceService.play(deviceId);
     else
@@ -58,6 +57,11 @@ public class DeviceController {
       @PathVariable("device_id") Long deviceId,
       @RequestBody PlaylistId playlistId){
     this.deviceService.addPlaylistToQueue(deviceId, playlistId);
+  }
+
+  @GetMapping("/{device_id}")
+  public ResponseEntity<Device> getDevice(@PathVariable("device_id")Long deviceId){
+    return ResponseEntity.ok(deviceService.get(deviceId));
   }
 
   @PatchMapping("/{device_id}/queue/add/song")

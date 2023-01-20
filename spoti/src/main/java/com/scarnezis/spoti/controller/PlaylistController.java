@@ -1,12 +1,14 @@
 package com.scarnezis.spoti.controller;
 
-import com.scarnezis.spoti.persistance.dto.PlaylistInDTO;
-import com.scarnezis.spoti.persistance.entity.Playlist;
-import com.scarnezis.spoti.persistance.entity.id.PlaylistId;
-import com.scarnezis.spoti.persistance.entity.id.SongId;
+import com.scarnezis.spoti.domain.Track;
+import com.scarnezis.spoti.dto.PlaylistInDTO;
+import com.scarnezis.spoti.domain.Playlist;
+import com.scarnezis.spoti.domain.id.PlaylistId;
+import com.scarnezis.spoti.domain.id.SongId;
 import com.scarnezis.spoti.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,16 +52,25 @@ public class PlaylistController {
   }
 
   @GetMapping
-  public ResponseEntity<List<Playlist>> getAll(
-      @RequestParam("playlist_name") Optional<String> optionalPlaylistName,
-      @RequestParam("owner_id") Optional<Long> optionalPlaylistOwner){
-    List<Playlist> playlists = null;
-    if(optionalPlaylistName.isPresent())
-      playlists = playlistService.findAllByName(optionalPlaylistName.get());
-    else if(optionalPlaylistOwner.isPresent())
-      playlists = playlistService.findAllByUser(optionalPlaylistOwner.get());
-    if (playlists.isEmpty())
-      return ResponseEntity.noContent().build();
-    return ResponseEntity.ok(playlists);
+  public Page<Playlist> getAll(
+      @RequestParam(value = "playlist_name", required = false) String playlistName,
+      @RequestParam(value = "offser", required = false) Integer offset,
+      @RequestParam(value = "page_size") Integer pageSize){
+
+    Page<Playlist> playlists = null;
+
+    if(playlistName != null)
+      playlists = playlistService.findAllByName(playlistName, offset, pageSize);
+    else
+      playlists = playlistService.findAll(offset, pageSize);
+    return playlists;
   }
+
+  @GetMapping("/{playlist_name}/user/{owner_id}/songs")
+  public  ResponseEntity<List<Track>> getTracks(@PathVariable("playlist_name") String playlistName,
+                                                @PathVariable("owner_id") Long ownerId){
+    PlaylistId playlistId = new PlaylistId(playlistName, ownerId);
+    return ResponseEntity.ok(this.playlistService.getTracks(playlistId));
+  }
+
 }
