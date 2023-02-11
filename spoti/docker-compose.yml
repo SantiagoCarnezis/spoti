@@ -1,0 +1,27 @@
+#
+#version: '3.7'
+#services:
+ # mysql-db:
+  #  container_name: mysql-db
+   # image: mysql:latest
+    #environment:
+     # MYSQL_HOST: mysqldb
+      #MYSQL_PASSWORD: root
+      #MYSQL_DATABASE: spoti
+#      MYSQL_ROOT_PASSWORD: root
+#    volumes:
+#      - ./mysql_spoti_data:/var/lib/mysql
+#    expose:
+#      - "3307"
+#    ports:
+#      - "3307:3306"
+
+#  spoti-service:
+#    container_name: spoti-service
+#    build: .
+#    links:
+#      - mysql-db
+#    expose:
+#      - "8080"
+#    ports:
+#      - "8080:8080"
