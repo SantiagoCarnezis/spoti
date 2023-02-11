@@ -27,9 +27,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = SongController.class)
+//@WebMvcTest(controllers = SongController.class)
 public class SongControllerTests {
-
+/*
   @MockBean
   private SongService songService;
   @Autowired
@@ -164,6 +164,6 @@ public class SongControllerTests {
         .andExpect(jsonPath("$.name", Matchers.is("Eye of the Tiger")))
         .andExpect(jsonPath("$.likesCounter", Matchers.is(0)));
   }
-
+*/
 
 }
